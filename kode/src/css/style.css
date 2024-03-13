@@ -1,0 +1,266 @@
+body{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: #060606;
+    color: white;
+}
+.wholepage{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+.maincontent{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ------ */
+/* HEADER */
+/* ------ */
+header{
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    background-color: #131313;
+    text-align: center;
+    align-items: center;
+    font-size: 125%;
+}
+#headerimg{
+    margin-right: 1%;
+    height: 90px;
+    border-radius: 8px;
+}
+
+/* ---------- */
+/* NAVIGASJON */
+/* ---------- */
+.navigation{
+    position: relative;
+    width: 100%;
+    background-color: #1f1f1f;
+}
+.navigation ul {
+    display: flex;
+    flex-flow: row;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #1f1f1f;
+    margin-right: auto;
+    margin-left: auto;
+    width: fit-content;
+}
+.navigation li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+.navigation li a:hover {
+    background-color: #060606;
+}
+#onpage{
+    background-color: #004d45;
+}
+
+/* ------------- */
+/* LAST OPP SIDE */
+/* ------------- */
+#box{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8px;
+    margin: 8px;
+    margin-top: 16px;
+    border-radius: 8px;
+    background-color: #2c2c2c;
+}
+#fileupload{
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    text-align: center;
+}
+#files{
+    font-size: 100%;
+}
+#result{
+    font-family: 'Open sans';
+}
+#uploadboxform{
+    margin-top: 5%;
+}
+#uploadboxform button{
+    font-size: 100%;
+}
+#box p{
+    font-size: 110%;
+    margin: 0px
+}
+#touploadbutton{
+    margin-top: 8px;
+    margin-bottom: 16px;
+    font-size: 110%;
+}
+
+/* ----- */
+/* LOGIN */
+/* ----- */
+
+#loginbutton{
+    position: absolute;
+    left: 93%;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: white;
+}
+#loginbutton img{
+    height: 25px;
+    width: 25px;
+}
+#logintext{
+    color: white;
+    text-decoration: none;
+    margin-left: 15%;
+}
+#username, #password{
+    font-family: 'Open sans';
+    margin: 8px 4px 8px 4px 
+}
+#user_username{
+    font-size: 110%;
+}
+#box h2{
+    margin: 8px;
+}
+#box{
+    font-size: 150%;
+}
+#submitlogin{
+    font-size: 115%;
+    margin: 16px;
+}
+#rememberme{
+    margin: 0px;
+    margin-right: 8px;
+}
+#box label{
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Open sans';
+}
+#registerbutton{
+    margin-top: 8px;
+    font-size: 175%;
+}
+#loginform{
+    display: flex;
+    flex-flow: column;
+    margin: 8px;
+    font-family: 'Open sans';
+}
+.responseDiv{
+    font-family: 'Open sans';
+}
+#accounttext{
+    margin-left: 10%;
+}
+.changepasswordbutton{
+    margin-bottom: 8px;
+}
+.dropdownelement{
+    display: none;
+    position: absolute;
+    z-index: 1;
+    width: max-content;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.dropdownelement a{
+    color: white;
+    text-decoration: none;
+    display: block;
+    background-color: red;
+    padding: 4px;
+    border-radius: 8px;
+    font-size: 85%;
+}
+#loginbutton:hover .dropdownelement {
+    display: block;
+}
+.loginbuttonline1{
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-items: center;
+}
+.dropdown{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 22%;
+}
+
+/* ------- */
+/* BUTTONS */
+/* ------- */
+
+.button1{
+    border: 0;
+    background-color: #004d45;
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.button2{
+    border: 0;
+    background-color: #004d45;
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 115%;
+}
+.button3{
+    border: 0;
+    background-color: red;
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 115%;
+    margin-bottom: 8px;
+}
+
+/* ---- */
+/* FONT */
+/* ---- */
+@font-face {
+    font-family: 'Open sans';
+    src: url(/src/fonts/Open_Sans/OpenSans-Regular.ttf);
+}
+@font-face {
+    font-family: 'Open sans light';
+    src: url(/src/fonts/Open_Sans/OpenSans-Light.ttf);
+}
+h1, h2, p{
+    font-family: 'Open sans';
+}
+a{
+    font-family: 'Open sans light';
+}

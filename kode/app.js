@@ -1,0 +1,251 @@
+// |--------------------|
+// |---MODULER OG APP---|
+// |--------------------|
+// Node modules
+const mysql = require("mysql");
+const express = require("express");
+const session = require("express-session");
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+const multer = require('multer');
+const path = require('path');
+const cors = require('cors');
+const fs = require('fs')
+const app = express();
+const port = 80;
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
+// cors
+app.use(cors());
+
+// Cookies i req.cookies
+app.use(cookieParser());
+
+// Data i http request
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Bruke data i req.body
+app.use(express.json());
+
+// Bruk forms i req.body
+app.use(express.urlencoded({ extended: true }));
+
+// Bruk mappe "/src" (html, css, js)
+app.use('/src', express.static(path.join(__dirname + '/src')));
+
+// Bruk session
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
+}));
+
+// Mariadb
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'IMKuben1337!',
+  database: 'årsoppgave2'
+});
+
+// -----
+// SIDER
+// -----
+
+// Når man først åpner siden
+app.get("/", function(req, res) {
+  
+  if(!req.session.isLoggedIn) {
+    res.clearCookie('loggedin')
+    res.clearCookie('username')
+    res.cookie('loggedin', 'false')
+    req.session.isLoggedIn = false;
+    req.session.username = "";
+  }
+  if(req.session.isLoggedIn === false) {
+    res.clearCookie('loggedin');
+    res.clearCookie('username');
+    res.cookie('loggedin', 'false');
+  }
+  // Send index.html
+  res.sendFile(__dirname + '/src/html/index.html');
+});
+// Upload
+app.get("/upload", function(req, res) {
+  if(req.session.isLoggedIn === true) {
+    res.sendFile(__dirname + '/src/html/upload.html');
+  } else {
+    res.cookie('responsecode', 'U_R');
+    res.redirect("/login")
+  }
+  // Send upload.html
+  
+});
+app.get("/files", function(req, res) {
+  res.sendFile(__dirname + '/src/html/files.html');
+});
+
+app.get("/login", function(req, res) {
+  res.sendFile(__dirname + '/src/html/login.html');
+});
+
+app.post("/loginauth", function(req, res) {
+  let username = req.body.username;
+  let password = req.body.password;
+
+  if (username && password) {
+    connection.query('SELECT * from usernamepassword WHERE username = ?', [username], function(err, result, fields) {
+      if (err) throw err;
+
+      if (result.length > 0) {
+        bcrypt.compare(password, result[0].password, function(err, passwordMatch) {
+          if (err) throw err;
+
+          if (passwordMatch) {
+            req.session.isLoggedIn = true;
+            req.session.username = username;
+            res.clearCookie('loggedin');
+            res.clearCookie('username');
+            res.cookie('loggedin', 'true');
+            res.cookie('username', username);
+            res.cookie('responsecode', 'LS');
+            res.clearCookie('errormessage');
+            res.redirect("/");
+          }
+          else {
+            res.cookie('errormessage', 'u_p');
+            res.cookie('responsecode', 'LF1');
+            res.redirect('/login');
+          }
+        })
+      } else {
+        res.cookie('responsecode', 'LF2');
+      }
+    })
+  } else {
+    res.cookie('responsecode', 'LF3');
+  }
+})
+
+app.get("/register", function(req, res) {
+  res.sendFile(__dirname + '/src/html/register.html');
+});
+
+app.post("/registerauth", function(req, res) {
+
+  let username = req.body.username;
+  let password = req.body.password;
+
+  if (username && password) {
+    connection.query('SELECT * from usernamepassword WHERE username = ?', [username], function(err, result, fields) {
+      if (err) throw err;
+
+      if (result.length > 0) {
+        res.cookie('responsecode', 'RF_1')
+
+        res.redirect('/register')
+
+      } else {
+        bcrypt.hash(password, 2, function(err, hash) {
+          if (err) throw err;
+
+          var values = [
+            [username, hash]
+          ];
+
+          connection.query('INSERT INTO usernamepassword (username, password) VALUES ?', [values], function(err, result) {
+            if (err) throw err;
+
+            res.cookie('responsecode', 'RS');
+            res.redirect('/login');
+          })
+        })
+      }
+    })
+  } else {
+    res.cookie('responsecode', 'RF_2');
+    res.redirect('/register');
+  }
+})
+
+app.get("/logout", function(req, res) {
+  req.session.isLoggedIn = false;
+  req.session.username = "";
+  res.clearCookie('loggedin');
+  res.clearCookie('username');
+  res.cookie('loggedin', 'false');
+  res.clearCookie('errormessage');
+  res.redirect("/");
+})
+
+app.get("/account", function(req, res) {
+  res.sendFile(__dirname + '/src/html/account.html')
+})
+
+app.get("/deleteconfirm", function(req, res) {
+  if(req.session.isLoggedIn == "true") {
+    connection.query('DELETE FROM usernamepassword WHERE username = ?', req.session.username, function(err, result) {
+      if (err) throw err;
+    })
+  }
+  res.redirect("/");
+})
+
+// Når send til home gå til hjemmeside
+app.get("/home", function(req, res) {
+  res.redirect("/");
+});
+// Filer
+
+// Når filen blir uploaded
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const query = 'SELECT * FROM usernamepassword WHERE username = ?';
+    const username = req.session.username;
+  
+    connection.query(query, [username], function (err, results) {
+      if (err) {
+        return cb(err);
+      }
+  
+      if (results.length === 0) {
+        return cb(new Error('User not found in the database'));
+      }
+  
+      const userId = String(results[0].id); // Convert userId to string
+  
+      if (!userId) {
+        return cb(new Error('User ID not available in the database'));
+      }
+  
+      const userFolderPath = path.join(__dirname, "files", userId);
+  
+      if (!fs.existsSync(userFolderPath)) {
+        fs.mkdirSync(userFolderPath);
+      }
+  
+      cb(null, userFolderPath);
+    });
+  },
+  filename: function (req, file, cb) {
+    const parsed = path.parse(file.originalname);
+    const normalized = parsed.name.replace(/\s+/g, '-').toLowerCase();
+    const extension = parsed.ext;
+    cb(null, normalized + extension);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+app.post('/upload', upload.single('file'), function (req, res, next) {
+  res.cookie('uploadstatus', 'r');
+  res.redirect("/upload");
+});
+
+//1. hente brukerens id fra db 
+//2. sette directories basert på brukerens id slik at filer kan be assosiert med brukeren den tilhører

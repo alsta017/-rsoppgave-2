@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hjemmeside</title>
+    <link rel="stylesheet" href="/src/css/style.css">
+    <script src="https://kit.fontawesome.com/b85b88c31a.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="wholepage">
+        <header>
+            <img id="headerimg" src="/src/images/placeholder.jpg" alt="Logo">
+            <h1>Toskr uploader</h1>
+            <a id="loginbutton"></a>
+        </header>
+        <div class="navigation">
+            <ul>
+                <li><a href="/home">Hjem</a></li>
+                <li><a href="/upload">Last opp</a></li>
+                <li><a href="/files">Filer</a></li>
+            </ul>
+        </div>
+        <div class="maincontent">
+            <div id="box">
+                <h2><i class="fa-solid fa-user-plus"></i> Register</h2>
+                <form action="/registerauth" method="post" id="loginform">
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" placeholder="Username" id="username" autocomplete="username" required>
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" placeholder="Password" id="password" autocomplete="current-password" required>
+                    <button id="submitlogin" class="button1" type="submit">Register</button>
+                </form>          
+            </div>
+            <a href="/login"><button id="registerbutton" class="button1">Back to login</button></a>
+        </div>
+    </div>
+    <script src="/src/js/register.js"></script>
+</body>
+</html>
