@@ -26,10 +26,11 @@
             <div id="box">
                 <h2><i class="fa-solid fa-upload"></i> Last opp en fil</h2>
                 <form action="/upload" id="uploadboxform" method="post" enctype="multipart/form-data">
-                    <input id="files" type="file" name="file">
-                    <button>Last opp</button>
+                    <label for="files" class="filestext">Velg fil</label>
+                    <input id="files" type="file" name="file" onselect="upload()">
+                    <button class="lastoppbutton">Last opp</button>
                 </form>
-                <div id="result"></div>
+                <p id="result"></p>
             </div>
         </div>
     </div>

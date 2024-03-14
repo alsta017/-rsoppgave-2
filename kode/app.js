@@ -14,6 +14,7 @@ const cors = require('cors');
 const fs = require('fs')
 const app = express();
 const port = 80;
+const baseDir = __dirname || process.cwd();
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
@@ -84,9 +85,6 @@ app.get("/upload", function(req, res) {
   }
   // Send upload.html
   
-});
-app.get("/files", function(req, res) {
-  res.sendFile(__dirname + '/src/html/files.html');
 });
 
 app.get("/login", function(req, res) {
@@ -245,6 +243,93 @@ const upload = multer({ storage: storage });
 app.post('/upload', upload.single('file'), function (req, res, next) {
   res.cookie('uploadstatus', 'r');
   res.redirect("/upload");
+});
+
+// Route to display uploaded files
+app.get("/files", function(req, res) {
+  // Retrieve userId from session
+  if(req.session.isLoggedIn == true) {
+    const username = req.session.username;
+    const query = 'SELECT * FROM usernamepassword WHERE username = ?';
+    
+    connection.query(query, [username], function (err, results) {
+      if (err) {
+        // Handle database query error
+        console.error("Error querying database:", err);
+        return res.status(500).send('Internal Server Error');
+      }
+  
+      if (results.length === 0) {
+        res.redirect("/login");
+      }
+  
+      const userId = String(results[0].id); // Convert userId to string
+  
+      // Define the directory where files are uploaded
+      const userFolderPath = path.join(__dirname, "files", userId);
+  
+      // Read the contents of the directory
+      fs.readdir(userFolderPath, (err, files) => {
+        if (err) {
+          // Handle directory read error
+          return res.redirect("/")
+        }
+  
+        // Read the HTML file
+        fs.readFile(path.join(__dirname, '/src/html/files.html'), 'utf8', (err, html) => {
+          if (err) {
+            // Handle file read error
+            console.error("Error reading HTML file:", err);
+            return res.status(500).send('Internal Server Error');
+          }
+  
+          // Replace placeholder in HTML with files array
+          res.cookie("files", JSON.stringify(files));
+  
+          // Send the modified HTML file to the client
+          res.send(html);
+        });
+      });
+    });
+  } else {
+    res.cookie('responsecode', 'U_S');
+    res.redirect("/login");
+  }
+});
+
+app.get('/download/:filename', function(req, res) {
+  // Retrieve filename from request parameters
+  const filename = req.params.filename;
+
+  const username = req.session.username;
+  const query = 'SELECT * FROM usernamepassword WHERE username = ?';
+  
+  connection.query(query, [username], function (err, results) {
+    if (err) {
+      // Handle database query error
+      console.error("Error querying database:", err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    if (results.length === 0) {
+      // Handle user not found error
+      res.redirect("/login");
+    }
+
+    const userId = String(results[0].id); // Convert userId to string
+    const filePath = path.join(__dirname, "files", userId, filename);
+
+    // Check if the file exists
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        // File does not exist
+        return res.status(404).send('File not found');
+      }
+
+    // Send the file for download
+    res.download(filePath);
+    });
+  });
 });
 
 //1. hente brukerens id fra db 

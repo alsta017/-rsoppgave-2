@@ -17,6 +17,8 @@ if (responseEl) {
         responseDiv.textContent = "Du må skrive inn brukernavn og passord";
     } else if (responseEl == "U_R") {
         responseDiv.textContent = "Du må logge inn for å laste opp filer";
+    } else if (responseEl == "U_S") {
+        responseDiv.textContent = "Du må logge inn for å se filer";
     }
     uploadboxEl.appendChild(responseDiv);
     document.cookie = "responsecode" +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';

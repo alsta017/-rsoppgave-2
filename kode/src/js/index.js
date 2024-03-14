@@ -11,3 +11,7 @@ if (uploadstatusEl) {
         document.cookie = "uploadstatus=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
 }
+
+function upload() {
+    window.location.href = "/upload";
+}

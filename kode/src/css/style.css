@@ -83,6 +83,7 @@ header{
     margin-top: 16px;
     border-radius: 8px;
     background-color: #2c2c2c;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 #fileupload{
     width: 100%;
@@ -92,7 +93,28 @@ header{
 }
 #files{
     font-size: 100%;
+    display: none;
 }
+.filestext{
+    font-size: 110%;
+    margin: 8px;
+    padding: 8px;
+    background-color: #393939;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.lastoppbutton{
+    margin: 8px;
+    padding: 8px;
+    background-color: #393939;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    border: 0px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
 #result{
     font-family: 'Open sans';
 }
@@ -213,6 +235,51 @@ header{
     justify-content: center;
     align-items: center;
     margin-top: 22%;
+}
+.filesDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    background-color: #2c2c2c;
+    padding: 8px;
+    margin: 8px;
+    margin-top: 16px;
+    border-radius: 8px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+#files_result{
+    margin: 0px;
+}
+.fileDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: row;
+    background-color: #393939;
+    padding: 16px;
+    margin: 4px;
+    border-radius: 8px;
+    font-size: 150%;
+    font-family: 'Open sans';
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.fileDiv p{
+    margin: 0px;
+    font-size: 115%;
+    font-family: 'Open sans';
+}
+.fileDivButton {
+    background-color: #454545;
+    border: 0px;
+    color: white;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 100%;
+    font-family: 'Open sans';
+    margin-left: 8px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
 /* ------- */
