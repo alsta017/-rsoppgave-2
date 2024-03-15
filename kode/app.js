@@ -122,10 +122,12 @@ app.post("/loginauth", function(req, res) {
         })
       } else {
         res.cookie('responsecode', 'LF2');
+        res.redirect('/login');
       }
     })
   } else {
     res.cookie('responsecode', 'LF3');
+    res.redirect('/login');
   }
 })
 

@@ -96,6 +96,9 @@ header{
     display: none;
 }
 .filestext{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 110%;
     margin: 8px;
     padding: 8px;
@@ -105,6 +108,9 @@ header{
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 .lastoppbutton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 8px;
     padding: 8px;
     background-color: #393939;
@@ -239,7 +245,7 @@ header{
 .filesDiv{
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     flex-flow: column;
     background-color: #2c2c2c;
     padding: 8px;
@@ -253,7 +259,7 @@ header{
 }
 .fileDiv{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     flex-flow: row;
     background-color: #393939;
@@ -263,6 +269,7 @@ header{
     font-size: 150%;
     font-family: 'Open sans';
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    width: 94%;
 }
 .fileDiv p{
     margin: 0px;
@@ -280,6 +287,24 @@ header{
     font-family: 'Open sans';
     margin-left: 8px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.marginright{
+    margin-right: 6px;
+}
+.red{
+    color: red;
+}
+.green{
+    color: lime;
+}
+.blue{
+    color: rgb(0, 102, 255);
+}
+.fileDivButtons{
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
 }
 
 /* ------- */

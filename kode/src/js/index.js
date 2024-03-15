@@ -1,5 +1,7 @@
 let resultEl = document.getElementById("result")
 
+feather.replace();
+
 const uploadstatusEl = ('; '+document.cookie).split(`; uploadstatus=`).pop().split(';')[0];
 
 if (uploadstatusEl) {

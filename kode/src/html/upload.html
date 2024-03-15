@@ -6,6 +6,7 @@
     <title>Last opp</title>
     <link rel="stylesheet" href="/src/css/style.css">
     <script src="https://kit.fontawesome.com/b85b88c31a.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body>
     <div class="wholepage">
@@ -26,9 +27,9 @@
             <div id="box">
                 <h2><i class="fa-solid fa-upload"></i> Last opp en fil</h2>
                 <form action="/upload" id="uploadboxform" method="post" enctype="multipart/form-data">
-                    <label for="files" class="filestext">Velg fil</label>
+                    <label for="files" class="filestext button1"><i data-feather="file-plus" class="marginright"></i> Velg fil</label>
                     <input id="files" type="file" name="file" onselect="upload()">
-                    <button class="lastoppbutton">Last opp</button>
+                    <button class="lastoppbutton button1"><i data-feather="upload" class="marginright"></i>Last opp</button>
                 </form>
                 <p id="result"></p>
             </div>

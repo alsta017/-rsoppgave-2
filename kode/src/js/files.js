@@ -22,18 +22,42 @@ for (i = 0; i < filesArray.length; i++) {
     let fileDivp = document.createElement("p");
     fileDivp.textContent = filesArray[i];
 
+    let fileDivButtons = document.createElement("div");
+    fileDivButtons.className = "fileDivButtons";
+
     let fileDivButton = document.createElement("button");
     fileDivButton.className = "fileDivButton";
     
     let fileDivButtoni = document.createElement("i");
-    fileDivButtoni.className = "fa-solid fa-download";
+    fileDivButtoni.className = "fa-solid fa-download green";
     
+    let fileDivButtonShare = document.createElement("button");
+    fileDivButtonShare.className = "fileDivButton";
+
+    let fileDivButtonSharei = document.createElement("i");
+    fileDivButtonSharei.className = "fa-solid fa-share blue";
+
+    let fileDivButtonDelete = document.createElement("button");
+    fileDivButtonDelete.className = "fileDivButton";
+
+    let fileDivButtonDeletei = document.createElement("i");
+    fileDivButtonDeletei.className = "fa-solid fa-trash-can red";
+
     fileDivButton.appendChild(fileDivButtoni);
     fileDivButton.setAttribute("id", i);
     fileDivButton.setAttribute("onclick", "downloadfile(this.id)");
 
     fileDiv.appendChild(fileDivp);
-    fileDiv.appendChild(fileDivButton);
+    fileDivButtons.appendChild(fileDivButton);
+
+    fileDivButtonShare.appendChild(fileDivButtonSharei);
+    fileDivButtons.appendChild(fileDivButtonShare);
+
+    fileDivButtonDelete.appendChild(fileDivButtonDeletei);
+    fileDivButtons.appendChild(fileDivButtonDelete);
+
+    fileDiv.appendChild(fileDivButtons);
+    
     filesDiv.appendChild(fileDiv);
 
     console.log(filesArray[i]);
