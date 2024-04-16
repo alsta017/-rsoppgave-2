@@ -15,7 +15,7 @@ if (loggedinEl === "true") {
 
     let divelement = document.createElement("div");
     divelement.setAttribute("id", "accounttext")
-    divelement.textContent = "Account"
+    divelement.textContent = "Bruker"
     loginbuttonline1El.appendChild(divelement)
 
     loginbuttonEl.appendChild(loginbuttonline1El);

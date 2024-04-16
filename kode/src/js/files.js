@@ -9,7 +9,6 @@ const decodedCookie = decodeURIComponent(cookieString);
 const filesArray = JSON.parse(decodedCookie);
 
 // Output the array of filenames
-console.log(filesArray);
 
 let filesDiv = document.createElement("div");
 filesDiv.className = "filesDiv";
@@ -46,12 +45,18 @@ for (i = 0; i < filesArray.length; i++) {
     fileDivButton.appendChild(fileDivButtoni);
     fileDivButton.setAttribute("id", i);
     fileDivButton.setAttribute("onclick", "downloadfile(this.id)");
-
+    
     fileDiv.appendChild(fileDivp);
     fileDivButtons.appendChild(fileDivButton);
 
+    fileDivButtonShare.setAttribute("onclick", "copytoclipboard(this.id)");
+    fileDivButtonShare.setAttribute("id", i);  // Ensure the id is set correctly to each share button
+
     fileDivButtonShare.appendChild(fileDivButtonSharei);
     fileDivButtons.appendChild(fileDivButtonShare);
+
+    fileDivButtonDelete.id = i;  // Set the ID to index
+    fileDivButtonDelete.setAttribute("onclick", "deletefile(this.id)")  // Use arrow function for context
 
     fileDivButtonDelete.appendChild(fileDivButtonDeletei);
     fileDivButtons.appendChild(fileDivButtonDelete);
@@ -59,8 +64,6 @@ for (i = 0; i < filesArray.length; i++) {
     fileDiv.appendChild(fileDivButtons);
     
     filesDiv.appendChild(fileDiv);
-
-    console.log(filesArray[i]);
 }
 files_resultEl.appendChild(filesDiv);
 
@@ -69,5 +72,36 @@ function downloadfile(id) {
         if (b == id) {
             window.location.href = "/download/" + filesArray[b];
         }
+    }
+}
+
+function copytoclipboard(id) {
+    const fileName = filesArray[id];
+    const downloadLink = window.location.origin + "/download/" + fileName;
+
+    navigator.clipboard.writeText(downloadLink).then(() => {
+        alert("Link kopiert til utklippstavlen");
+    }, (err)=> {
+        alert("Kunne ikke kopiere link til utklippstavlen", err);
+    })
+}
+
+function deletefile(id) {
+    const fileName = filesArray[id];
+
+    // Confirmation dialog
+    if (confirm('Are you sure you want to delete this file?')) {
+        fetch("/delete/" + fileName, { method: 'DELETE' })
+            .then(response => response.json()) // Parse JSON response
+            .then(data => {
+                if (!data.ok) {
+                    throw new Error(data.message || "An error occurred");
+                }
+                location.reload(); // Reload only on success
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Failed to delete file: ' + error.message);
+            });
     }
 }

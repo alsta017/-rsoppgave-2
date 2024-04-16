@@ -11,7 +11,8 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
 const cors = require('cors');
-const fs = require('fs')
+const fs = require('fs');
+const { connect } = require("http2");
 const app = express();
 const port = 80;
 const baseDir = __dirname || process.cwd();
@@ -333,6 +334,40 @@ app.get('/download/:filename', function(req, res) {
     });
   });
 });
+
+app.delete('/delete/:filename', function(req, res) {
+  if (!req.session.isLoggedIn) {
+    return res.status(403).json({ message: 'Not logged in' });
+  }
+
+  const username = req.session.username;
+  const { filename } = req.params;
+
+  connection.query('SELECT id FROM usernamepassword WHERE username = ?', [username], function (err, results) {
+    if (err) {
+      return res.status(500).json({ message: 'Database error', error: err });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const userId = String(results[0].id);
+    const filePath = path.join(__dirname, 'files', userId, filename);
+
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        return res.status(500).json({ message: 'Error deleting file', error: err });
+      }
+
+      res.status(200).json({ message: 'File deleted successfully', ok: true });
+    });
+  });
+});
+
+app.get("/shop", function (req, res) {
+  res.sendFile(__dirname + '/src/html/shop.html')
+}); 
 
 //1. hente brukerens id fra db 
 //2. sette directories basert på brukerens id slik at filer kan be assosiert med brukeren den tilhører
