@@ -1,107 +1,169 @@
-let files_resultEl = document.getElementById("files_result")
-
-const cookieString = ('; '+document.cookie).split(`; files=`).pop().split(';')[0];
-
-// Decode the URL-encoded string
+const files_resultEl = document.getElementById("files_result");
+const cookieString = ('; ' + document.cookie).split('; files=').pop().split(';')[0];
 const decodedCookie = decodeURIComponent(cookieString);
-
-// Parse the JSON string into an array
 const filesArray = JSON.parse(decodedCookie);
-
-// Output the array of filenames
-
-let filesDiv = document.createElement("div");
+const filesDiv = document.createElement("div");
 filesDiv.className = "filesDiv";
 
-for (i = 0; i < filesArray.length; i++) {
-    
-    let fileDiv = document.createElement("div");
-    fileDiv.className = "fileDiv";
-    
-    let fileDivp = document.createElement("p");
-    fileDivp.textContent = filesArray[i];
+filesArray.forEach((fileName, i) => {
+    const fileExtension = fileName.split('.').pop();
+    const fileIconClass = getIconForExtension(fileExtension);
 
-    let fileDivButtons = document.createElement("div");
+    const fileDiv = document.createElement("div");
+    fileDiv.className = "fileDiv";
+
+    const fileDivp = document.createElement("p");
+    fileDivp.textContent = fileName;
+
+    const fileIcon = document.createElement("i");
+    fileIcon.className = "fileicon fa-solid " + fileIconClass;
+    fileDivp.prepend(fileIcon); // Prepend the icon to the paragraph
+
+    const fileDivButtons = document.createElement("div");
     fileDivButtons.className = "fileDivButtons";
 
-    let fileDivButton = document.createElement("button");
-    fileDivButton.className = "fileDivButton";
-    
-    let fileDivButtoni = document.createElement("i");
-    fileDivButtoni.className = "fa-solid fa-download green";
-    
-    let fileDivButtonShare = document.createElement("button");
-    fileDivButtonShare.className = "fileDivButton";
+    const downloadButton = createButton(i, "fa-download green", downloadfile);
+    const shareButton = createButton(i, "fa-share blue", copytoclipboard);
+    const deleteButton = createButton(i, "fa-trash-can red", deletefile);
+    [downloadButton, shareButton, deleteButton].forEach(button => fileDivButtons.appendChild(button));
 
-    let fileDivButtonSharei = document.createElement("i");
-    fileDivButtonSharei.className = "fa-solid fa-share blue";
-
-    let fileDivButtonDelete = document.createElement("button");
-    fileDivButtonDelete.className = "fileDivButton";
-
-    let fileDivButtonDeletei = document.createElement("i");
-    fileDivButtonDeletei.className = "fa-solid fa-trash-can red";
-
-    fileDivButton.appendChild(fileDivButtoni);
-    fileDivButton.setAttribute("id", i);
-    fileDivButton.setAttribute("onclick", "downloadfile(this.id)");
-    
     fileDiv.appendChild(fileDivp);
-    fileDivButtons.appendChild(fileDivButton);
-
-    fileDivButtonShare.setAttribute("onclick", "copytoclipboard(this.id)");
-    fileDivButtonShare.setAttribute("id", i);  // Ensure the id is set correctly to each share button
-
-    fileDivButtonShare.appendChild(fileDivButtonSharei);
-    fileDivButtons.appendChild(fileDivButtonShare);
-
-    fileDivButtonDelete.id = i;  // Set the ID to index
-    fileDivButtonDelete.setAttribute("onclick", "deletefile(this.id)")  // Use arrow function for context
-
-    fileDivButtonDelete.appendChild(fileDivButtonDeletei);
-    fileDivButtons.appendChild(fileDivButtonDelete);
-
     fileDiv.appendChild(fileDivButtons);
-    
+
+    if (['mp4', 'mov', 'avi'].includes(fileExtension)) {
+        const playButton = createMediaButton(i, fileName, 'video');
+        fileDiv.appendChild(playButton);
+    }
+
+    if (['jpg', 'png', 'gif'].includes(fileExtension)) {
+        const viewButton = createMediaButton(i, fileName, 'image');
+        fileDiv.appendChild(viewButton);
+    }
+
     filesDiv.appendChild(fileDiv);
-}
+});
+
 files_resultEl.appendChild(filesDiv);
 
+function createButton(id, iconClass, handler) {
+    const button = document.createElement("button");
+    button.className = "fileDivButton";
+    const icon = document.createElement("i");
+    icon.className = `fa-solid ${iconClass}`;
+    button.appendChild(icon);
+    button.addEventListener('click', handler.bind(null, id));
+    return button;
+}
+
 function downloadfile(id) {
-    for (b = 0; b < filesArray.length; b++) {
-        if (b == id) {
-            window.location.href = "/download/" + filesArray[b];
-        }
-    }
+    window.location.href = "/download/" + filesArray[id];
 }
 
 function copytoclipboard(id) {
     const fileName = filesArray[id];
-    const downloadLink = window.location.origin + "/download/" + fileName;
 
-    navigator.clipboard.writeText(downloadLink).then(() => {
-        alert("Link kopiert til utklippstavlen");
-    }, (err)=> {
-        alert("Kunne ikke kopiere link til utklippstavlen", err);
-    })
+    fetch(`/sharelink/${encodeURIComponent(fileName)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.link) {
+                navigator.clipboard.writeText(data.link).then(() => {
+                    alert("Link copied to clipboard");
+                }, err => {
+                    alert("Failed to copy link: " + err);
+                });
+            } else {
+                throw new Error('No link provided by server');
+            }
+        })
+        .catch(err => {
+            alert("Failed to retrieve link: " + err.message);
+        });
 }
 
-function deletefile(id) {
-    const fileName = filesArray[id];
 
-    // Confirmation dialog
+function deletefile(id) {
     if (confirm('Are you sure you want to delete this file?')) {
-        fetch("/delete/" + fileName, { method: 'DELETE' })
-            .then(response => response.json()) // Parse JSON response
+        fetch("/delete/" + filesArray[id], { method: 'DELETE' })
+            .then(response => response.json())
             .then(data => {
-                if (!data.ok) {
-                    throw new Error(data.message || "An error occurred");
-                }
-                location.reload(); // Reload only on success
+                if (!data.ok) throw new Error(data.message || "An error occurred");
+                location.reload();
             })
             .catch(error => {
                 console.error(error);
                 alert('Failed to delete file: ' + error.message);
             });
     }
+}
+
+function createMediaButton(id, fileName, type) {
+    const button = document.createElement("button");
+    button.className = "fileDivButton";
+
+    // Create icon inside the button
+    const icon = document.createElement("i");
+    icon.className = `fa-solid ${type === 'video' ? 'fa-play' : 'fa-image'}`; // 'fa-play' for video, 'fa-image' for images
+    button.appendChild(icon);
+
+    // Setting the onclick event to show the media overlay
+    button.addEventListener('click', () => showMediaOverlay(fileName, type));
+
+    return button;
+}
+
+function showMediaOverlay(fileName, fileType) {
+    const mediaOverlay = document.getElementById('mediaOverlay');
+    const videoPlayer = document.getElementById('videoPlayer');
+    const imageViewer = document.getElementById('imageViewer');
+
+    // Hide both media views initially
+    videoPlayer.style.display = 'none';
+    imageViewer.style.display = 'none';
+
+    if (fileType === 'video') {
+        videoPlayer.src = "/download/" + fileName; // Set the source for the video
+        videoPlayer.style.display = 'block'; // Show the video player
+    } else if (fileType === 'image') {
+        imageViewer.src = "/download/" + fileName; // Set the source for the image
+        imageViewer.style.display = 'block'; // Show the image viewer
+    }
+
+    // Display the overlay
+    mediaOverlay.style.display = 'flex';
+
+    // Function to close the overlay by clicking on it
+    mediaOverlay.onclick = function(event) {
+        if (event.target === this) { // Ensures we are not closing when clicking on the video/image itself
+            mediaOverlay.style.display = 'none'; // Hide the overlay
+            videoPlayer.src = ''; // Stop video playback and unload the video
+            imageViewer.src = ''; // Clear the image source
+        }
+    };
+}
+
+const closeBtn = document.getElementById('closeOverlay');
+const mediaOverlay = document.getElementById('mediaOverlay');
+const videoPlayer = document.getElementById('videoPlayer');
+const imageViewer = document.getElementById('imageViewer');
+
+closeBtn.addEventListener('click', function() {
+    mediaOverlay.style.display = 'none'; // Hide the overlay
+    videoPlayer.style.display = 'none'; // Hide and stop the video player
+    imageViewer.style.display = 'none'; // Hide the image viewer
+    videoPlayer.src = ''; // Clear the video source to stop the video
+    imageViewer.src = ''; // Clear the image source
+});
+
+function getIconForExtension(extension) {
+    const icons = {
+        'pdf': 'fa-file-pdf',
+        'docx': 'fa-file-word',
+        'xlsx': 'fa-file-excel',
+        'jpg': 'fa-file-image',
+        'png': 'fa-file-image',
+        'txt': 'fa-file-alt',
+        'mp4': 'fa-video',
+        // add other file types as needed
+    };
+    return icons[extension.toLowerCase()] || 'fa-file'; // default to a generic file icon if no match
 }

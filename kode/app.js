@@ -97,40 +97,41 @@ app.post("/loginauth", function(req, res) {
   let password = req.body.password;
 
   if (username && password) {
-    connection.query('SELECT * from usernamepassword WHERE username = ?', [username], function(err, result, fields) {
-      if (err) throw err;
-
-      if (result.length > 0) {
-        bcrypt.compare(password, result[0].password, function(err, passwordMatch) {
+      connection.query('SELECT * from usernamepassword WHERE username = ?', [username], function(err, result, fields) {
           if (err) throw err;
 
-          if (passwordMatch) {
-            req.session.isLoggedIn = true;
-            req.session.username = username;
-            res.clearCookie('loggedin');
-            res.clearCookie('username');
-            res.cookie('loggedin', 'true');
-            res.cookie('username', username);
-            res.cookie('responsecode', 'LS');
-            res.clearCookie('errormessage');
-            res.redirect("/");
+          if (result.length > 0) {
+              bcrypt.compare(password, result[0].password, function(err, passwordMatch) {
+                  if (err) throw err;
+
+                  if (passwordMatch) {
+                      req.session.isLoggedIn = true;
+                      req.session.username = username;
+                      req.session.userId = result[0].id; // Store user ID in session
+                      res.clearCookie('loggedin');
+                      res.clearCookie('username');
+                      res.cookie('loggedin', 'true');
+                      res.cookie('username', username);
+                      res.cookie('responsecode', 'LS');
+                      res.clearCookie('errormessage');
+                      res.redirect("/");
+                  }
+                  else {
+                      res.cookie('errormessage', 'u_p');
+                      res.cookie('responsecode', 'LF1');
+                      res.redirect('/login');
+                  }
+              });
+          } else {
+              res.cookie('responsecode', 'LF2');
+              res.redirect('/login');
           }
-          else {
-            res.cookie('errormessage', 'u_p');
-            res.cookie('responsecode', 'LF1');
-            res.redirect('/login');
-          }
-        })
-      } else {
-        res.cookie('responsecode', 'LF2');
-        res.redirect('/login');
-      }
-    })
+      });
   } else {
-    res.cookie('responsecode', 'LF3');
-    res.redirect('/login');
+      res.cookie('responsecode', 'LF3');
+      res.redirect('/login');
   }
-})
+});
 
 app.get("/register", function(req, res) {
   res.sendFile(__dirname + '/src/html/register.html');
@@ -368,6 +369,35 @@ app.delete('/delete/:filename', function(req, res) {
 app.get("/shop", function (req, res) {
   res.sendFile(__dirname + '/src/html/shop.html')
 }); 
+
+app.get('/sharelink/:filename', function(req, res) {
+  if (!req.session.isLoggedIn || !req.session.userId) {
+      res.status(403).json({ error: "Not logged in or session expired" });
+      return;
+  }
+
+  const filename = req.params.filename;
+  const userId = req.session.userId; // Make sure userId is available in the session
+  const link = `${req.protocol}://${req.get('host')}/preview/${userId}/${encodeURIComponent(filename)}`;
+
+  res.json({ link: link });
+});
+
+app.get('/preview/:userId/:filename', (req, res) => {
+  const { userId, filename } = req.params;
+  const filePath = path.join(__dirname, 'files', userId, filename);
+
+  if (!fs.existsSync(filePath)) {
+      return res.status(404).send('File not found');
+  }
+
+  // Serve the file directly; we'll handle display client-side
+  res.sendFile(filePath);
+});
+
+app.get('/filepreview', function(req, res) {
+  res.sendFile(path.join(__dirname + '/src/html/filepreview.html'));
+});
 
 //1. hente brukerens id fra db 
 //2. sette directories basert på brukerens id slik at filer kan be assosiert med brukeren den tilhører
