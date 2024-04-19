@@ -236,6 +236,7 @@ header{
 #loginbutton:hover .dropdownelement {
     display: block;
 }
+
 .loginbuttonline1{
     display: flex;
     flex-flow: row;
@@ -305,6 +306,12 @@ header{
 .marginright{
     margin-right: 6px;
 }
+.margintop{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 8px;
+}
 .red{
     color: red;
 }
@@ -354,6 +361,55 @@ header{
 
 #closeOverlay:hover {
     background: rgba(0, 0, 0, 0.8);
+}
+#oldpassword, #newpassword{
+    margin-bottom: 8px;
+    width: 80%;
+    font-size: 95%;
+    font-family: 'Open sans';
+    padding: 8px;
+    border-radius: 8px;
+    border: 0;
+    background-color: #393939;
+    color: white;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    transition-duration: 200ms;
+    transition-property: background-color;
+}
+
+#oldpassword:hover, #newpassword:focus, #newpassword:hover, #oldpassword:focus{
+    background-color: #454545;
+}
+#changepasswordform{
+    flex-flow: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+h1{
+    font-size: 4vw;
+    margin-left: 4px;
+}
+@media only screen and (max-width: 400px) {
+    #loginbutton {
+        left: 85%; /* Adjust based on your specific design */
+        font-size: 80%; /* Smaller font size on smaller screens */
+    }
+    header {
+        flex-flow: column;
+    }
+    h1{
+        margin-left: 0px;
+        font-size: 85%;
+    }
+    #headerimg{
+        margin-right: 0px;
+    }
+}
+@media only screen and (min-width: 900px) {
+    h1{
+        font-size: 175%;
+    }
 }
 
 /* ------- */

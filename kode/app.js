@@ -399,5 +399,9 @@ app.get('/filepreview', function(req, res) {
   res.sendFile(path.join(__dirname + '/src/html/filepreview.html'));
 });
 
+app.get('/account/changepassword', function(req, res) {
+  res.sendFile(path.join(__dirname + '/src/html/changepassword.html'));
+});
+
 //1. hente brukerens id fra db 
 //2. sette directories basert på brukerens id slik at filer kan be assosiert med brukeren den tilhører
