@@ -12,7 +12,6 @@
         <header>
             <img id="headerimg" src="/src/images/placeholder.jpg" alt="Logo">
             <h1>Skjellum uploader</h1>
-            <a id="loginbutton" href="/login"></a>
         </header>
         <div class="navigation">
             <ul>
@@ -26,12 +25,12 @@
         <div class="maincontent">
             <div id="box">
                 <h2><i class="fa-solid fa-user"></i> Brukerside</h2>
-                <p id="user_username"></p>
-                <button onclick="location.replace('/account/changepassword')" class="changepasswordbutton button2"><i class="fa-solid fa-key"></i> Endre passord</button">
-                <a href="/logout"><button class="button3"><i class="fa-solid fa-right-from-bracket"></i> Log out</button></a>
-                <a href="/deleteconfirm"><button class="button3"><i class="fa-solid fa-trash"></i> Delete account</button></a>
+                <p id="user_username">...</p>
+                <button onclick="location.replace('/account/changepassword')" id="changepassword" class="changepasswordbutton button2"><i class="fa-solid fa-key"></i> Endre passord</button">
+                <a href="/logout"><button id="logout" class="button3"><i class="fa-solid fa-right-from-bracket"></i> Logg ut</button></a>
+                <a href="/deleteconfirm"><button id="delete" class="button3"><i class="fa-solid fa-trash"></i> Slett bruker</button></a>
             </div>
-            <a href="/"><button id="registerbutton" class="button1"><i class="fa-solid fa-backward"></i> Back</button></a>
+            <a href="/"><button id="registerbutton" class="button1"><i class="fa-solid fa-backward"></i> Tilbake</button></a>
         </div>
     </div>
     <script src="/src/js/account.js"></script>

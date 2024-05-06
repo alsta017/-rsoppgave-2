@@ -26,13 +26,14 @@
         <div class="maincontent">
             <div id="box">
                 <h2><i class="fa-solid fa-right-to-bracket"></i> Login</h2>
-                <form action="/loginauth" method="post" id="loginform">
+                <form id="loginform">
                     <label for="username">Username:</label>
-                    <input type="text" name="username" placeholder="Username" id="username" autocomplete="username" required>
+                    <input type="text" placeholder="Username" id="username" autocomplete="username" required>
                     <label for="password">Password:</label>
-                    <input type="password" name="password" placeholder="Password" id="password" autocomplete="current-password" required>
+                    <input type="password" placeholder="Password" id="password" autocomplete="current-password" required>
                     <button id="submitlogin" class="button1" type="submit">Login</button>
-                </form>           
+                </form>    
+                <div id="responseDiv"></div>       
             </div>
             <a href="/register"><button id="registerbutton" class="button1">Register</button></a>
         </div>

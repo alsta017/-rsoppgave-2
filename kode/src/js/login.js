@@ -1,25 +1,30 @@
-let uploadboxEl = document.getElementById("box");
+document.getElementById('loginform').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-let responseEl = ('; '+document.cookie).split(`; responsecode=`).pop().split(';')[0];
-
-if (responseEl) {
-    let responseDiv = document.createElement("div");
-    responseDiv.className = "responseDiv";
-    if (responseEl == "RS") {
-        responseDiv.textContent = "Account created";
-    } else if (responseEl == "RF_2") {
-        responseDiv.textContent = "Du må skrive inn brukernavn og passord"
-    } else if (responseEl == "LF1") {
-        responseDiv.textContent = "Feil brukernavn eller passord";
-    } else if (responseEl == "LF2") {
-        responseDiv.textContent = "Feil brukernavn eller passord";
-    } else if (responseEl == "LF3") {
-        responseDiv.textContent = "Du må skrive inn brukernavn og passord";
-    } else if (responseEl == "U_R") {
-        responseDiv.textContent = "Du må logge inn for å laste opp filer";
-    } else if (responseEl == "U_S") {
-        responseDiv.textContent = "Du må logge inn for å se filer";
-    }
-    uploadboxEl.appendChild(responseDiv);
-    document.cookie = "responsecode" +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-};
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    fetch('/loginauth', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const responseDivEl = document.getElementById("responseDiv")
+        if (data.error) {
+            responseDivEl.textContent = data.error;
+            responseDivEl.style.color = "red";
+        } else {
+            responseDivEl.textContent = data.message;
+            responseDivEl.style.color = "green";
+            setTimeout(function() {
+                window.location.href = "/";
+            }, 1000);
+        }
+    })
+    .catch(error => {
+        console.error(error);
+    });
+});

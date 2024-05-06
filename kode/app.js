@@ -97,40 +97,29 @@ app.post("/loginauth", function(req, res) {
   let password = req.body.password;
 
   if (username && password) {
-      connection.query('SELECT * from usernamepassword WHERE username = ?', [username], function(err, result, fields) {
+    connection.query('SELECT * from usernamepassword WHERE username = ?', [username], function(err, result, fields) {
+      if (err) throw err;
+
+      if (result.length > 0) {
+        bcrypt.compare(password, result[0].password, function(err, passwordMatch) {
           if (err) throw err;
 
-          if (result.length > 0) {
-              bcrypt.compare(password, result[0].password, function(err, passwordMatch) {
-                  if (err) throw err;
-
-                  if (passwordMatch) {
-                      req.session.isLoggedIn = true;
-                      req.session.username = username;
-                      req.session.userId = result[0].id; // Store user ID in session
-                      res.clearCookie('loggedin');
-                      res.clearCookie('username');
-                      res.cookie('loggedin', 'true');
-                      res.cookie('username', username);
-                      res.cookie('responsecode', 'LS');
-                      res.clearCookie('errormessage');
-                      res.redirect("/");
-                  }
-                  else {
-                      res.cookie('errormessage', 'u_p');
-                      res.cookie('responsecode', 'LF1');
-                      res.redirect('/login');
-                  }
-              });
+          if (passwordMatch) {
+            req.session.isLoggedIn = true;
+            req.session.username = username;
+            req.session.userId = result[0].id; // Store user ID in session
+            return res.status(200).json({ message: 'Login successful' });
           } else {
-              res.cookie('responsecode', 'LF2');
-              res.redirect('/login');
-          }
-      });
+            return res.status(401).json({ error: 'Wrong username or password' });
+          };
+        });
+      } else {
+        return res.status(401).json({ error: 'Wrong username or password' });
+      };
+    });
   } else {
-      res.cookie('responsecode', 'LF3');
-      res.redirect('/login');
-  }
+    return res.status(404).json({ error: 'No username or password is entered!' });
+  };
 });
 
 app.get("/register", function(req, res) {
@@ -402,6 +391,14 @@ app.get('/filepreview', function(req, res) {
 app.get('/account/changepassword', function(req, res) {
   res.sendFile(path.join(__dirname + '/src/html/changepassword.html'));
 });
+
+app.get('/check-login', function(req, res) {
+  if (req.session.isLoggedIn) {
+    res.status(200).json({ isLoggedIn: true, username: req.session.username });
+  } else {
+    res.status(401).json({ isLoggedIn: false });
+  }
+})
 
 //1. hente brukerens id fra db 
 //2. sette directories basert på brukerens id slik at filer kan be assosiert med brukeren den tilhører
