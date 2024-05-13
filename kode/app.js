@@ -16,6 +16,7 @@ const { connect } = require("http2");
 const app = express();
 const port = 80;
 const baseDir = __dirname || process.cwd();
+const async = require('async');
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
@@ -67,6 +68,7 @@ app.get("/", function(req, res) {
     res.cookie('loggedin', 'false')
     req.session.isLoggedIn = false;
     req.session.username = "";
+    req.session.role = "";
   }
   if(req.session.isLoggedIn === false) {
     res.clearCookie('loggedin');
@@ -81,10 +83,8 @@ app.get("/upload", function(req, res) {
   if(req.session.isLoggedIn === true) {
     res.sendFile(__dirname + '/src/html/upload.html');
   } else {
-    res.cookie('responsecode', 'U_R');
     res.redirect("/login")
   }
-  // Send upload.html
   
 });
 
@@ -108,6 +108,7 @@ app.post("/loginauth", function(req, res) {
             req.session.isLoggedIn = true;
             req.session.username = username;
             req.session.userId = result[0].id; // Store user ID in session
+            req.session.role = result[0].role;
             return res.status(200).json({ message: 'Login successful' });
           } else {
             return res.status(401).json({ error: 'Wrong username or password' });
@@ -166,6 +167,7 @@ app.post("/registerauth", function(req, res) {
 app.get("/logout", function(req, res) {
   req.session.isLoggedIn = false;
   req.session.username = "";
+  req.session.role = "";
   res.clearCookie('loggedin');
   res.clearCookie('username');
   res.cookie('loggedin', 'false');
@@ -398,7 +400,78 @@ app.get('/check-login', function(req, res) {
   } else {
     res.status(401).json({ isLoggedIn: false });
   }
-})
+});
+
+app.get('/admin', function(req, res) {
+  // Check if the user is logged in and is an admin
+  if (req.session.isLoggedIn && req.session.role === "Admin") {
+    // Query to get all users
+    connection.query('SELECT * FROM usernamepassword', function (err, users) {
+      if (err) {
+        // Handle database query error
+        console.error("Error querying database:", err);
+        return res.status(500).send('Internal Server Error');
+      }
+
+      // Array to store all files from all users
+      let allFiles = [];
+
+      // Helper function to read files from a user's folder
+      function readUserFiles(user, callback) {
+        const userId = String(user.id);
+        const userFolderPath = path.join(__dirname, "files", userId);
+
+        // Read files from user directory
+        fs.readdir(userFolderPath, (err, files) => {
+          if (err) {
+            // If user directory doesn't exist or error reading directory, move to next user
+            console.error("Error reading user directory for user:", userId, err);
+            return callback();
+          }
+
+          // Add files to allFiles array
+          files.forEach(file => {
+            allFiles.push({
+              userId: userId,
+              username: user.username,
+              filename: file
+            });
+          });
+
+          // Move to next user
+          callback();
+        });
+      }
+
+      // Iterate over each user to retrieve their files
+      async.each(users, readUserFiles, function(err) {
+        if (err) {
+          // Handle error
+          console.error("Error processing files:", err);
+          return res.status(500).send('Internal Server Error');
+        }
+
+        // Read the admin.html file
+        fs.readFile(path.join(__dirname, '/src/html/admin.html'), 'utf8', (err, html) => {
+          if (err) {
+            // Handle file read error
+            console.error("Error reading HTML file:", err);
+            return res.status(500).send('Internal Server Error');
+          }
+
+          // Replace placeholder in HTML with files array
+          const modifiedHtml = html.replace('<!-- FILES_PLACEHOLDER -->', JSON.stringify(allFiles));
+
+          // Send the modified HTML file to the client
+          res.send(modifiedHtml);
+        });
+      });
+    });
+  } else {
+    // Redirect non-admins or not logged in users to the login page
+    res.redirect("/login");
+  }
+});
 
 //1. hente brukerens id fra db 
 //2. sette directories basert på brukerens id slik at filer kan be assosiert med brukeren den tilhører
