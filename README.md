@@ -45,7 +45,11 @@ Jeg har også laget en administratorside som man kan gå inn på hvis man har ri
 
 ## Dokumentasjon
 
+Legg inn noe her
+
 ### Nettverkstegning
+
+
 
 ### Backup-rutiner
 
