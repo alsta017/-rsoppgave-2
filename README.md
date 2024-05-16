@@ -45,46 +45,48 @@ Jeg har også laget en administratorside som man kan gå inn på hvis man har ri
 
 ## Dokumentasjon
 
-Jeg begynnte først med login-systemet
+Jeg begynnte først med login-systemet [Legg inn resten av teksten fra word...]
 
 [Oversikt uke for uke](https://github.com/alsta017/-rsoppgave-2/tree/main/dokumenter/dokumentasjon.md)
 
 ### Nettverkstegning
 
+[Husk å legge inn linken her!]
 
 
 ### Backup-rutiner
-
+[Husk å legge inn teksten fra word her!]
 ### Teknisk dokumentasjon
-
+[Husk å legge inn teksten fra word her!]
 #### Bruker/Passord
-
+[Husk å legge inn teksten fra word her!]
 #### IP-adresser + hostname
-
+[Husk å legge inn teksten fra word her!]
 #### Porter
-
+[Husk å legge inn teksten fra word her!]
 #### Server-funksjon
-
+[Husk å legge inn teksten fra word her!]
 ### Brukerveiledninger
-
+[Husk å legge inn teksten fra word her!]
 ### Relevante lenker
-
-#### Github
+[Husk å legge inn teksten fra word her!]
+#### [Github](https://github.com/alsta017/-rsoppgave-2)
 
 #### Opplæringsmateriale
-
+[Husk å legge inn teksten fra word her!]
 ## Kartlegging av relevant lovverk
-
+[Husk å legge inn teksten fra word her!]
 ## Risikoanalyse og tiltaksplan
-
+[Husk å legge inn teksten fra word her!]
 ## Egenevaluering
-
+[Husk å legge inn teksten fra word her!]
 ### Hvilke utfordringer har du støtt på underveis med evt løsninger
-
+[Husk å legge inn teksten fra word her!]
 ### Hva har du lært av arbid med årsoppgaven
-
+[Husk å legge inn teksten fra word her!]
 ### Hvordan vurderer du selv arbeidet som er gjort
-
+[Husk å legge inn teksten fra word her!]
 ### Hva tenker du burde være gjort annerledes?
-
+[Husk å legge inn teksten fra word her!]
 ## Kilder
+[Husk å legge inn linkene fra word her!]
