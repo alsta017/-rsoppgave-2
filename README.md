@@ -45,7 +45,9 @@ Jeg har også laget en administratorside som man kan gå inn på hvis man har ri
 
 ## Dokumentasjon
 
-Legg inn noe her
+Jeg begynnte først med login-systemet
+
+[Oversikt uke for uke](https://github.com/alsta017/-rsoppgave-2/tree/main/dokumenter/dokumentasjon.md)
 
 ### Nettverkstegning
 
