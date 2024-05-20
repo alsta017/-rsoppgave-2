@@ -74,8 +74,10 @@ Hoste NodeJS server og MariaDB databasen.
 ### Brukerveiledninger
 Hvordan laste opp filer til nettsiden?
 1. Du må logge inn for å laste opp filer. Dette kan du gjøre ved å trykke på "Login"-knappen
-![Login knapp posisjon](https://prnt.sc/0-nrs_awRcT5 "Login")
-
+![Login-tutorial1](/kode/src/images/login_tutorial1.png)
+2. Her må du skrive inn brukernavn og passord hvis du har en bruker. Hvis du ikke har bruker så trykker du på "Registrer" og skriver inn ny bruker sitt brukernavn og passord.
+![Login-tutorial2](/kode/src/images/login_tutorial2.png)
+3. Når du har skrevet inn brukernavn og passord trykker du på "Login"
 ### Relevante lenker
 [Husk å legge inn teksten fra word her!]
 #### [Github](https://github.com/alsta017/-rsoppgave-2)
