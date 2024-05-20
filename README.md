@@ -55,19 +55,27 @@ Jeg begynnte først med login-systemet [Legg inn resten av teksten fra word...]
 
 
 ### Backup-rutiner
-[Husk å legge inn teksten fra word her!]
+Har prosjektet på GitHub samt backup i OneDrive
 ### Teknisk dokumentasjon
-[Husk å legge inn teksten fra word her!]
+
 #### Bruker/Passord
-[Husk å legge inn teksten fra word her!]
+| Type | Brukernavn | Passord |
+| - | - | - |
+| Ubuntu server | alsta017 | IMKuben1337! |
+| MariaDB | root | IMKuben1337! |
 #### IP-adresser + hostname
 [Husk å legge inn teksten fra word her!]
 #### Porter
-[Husk å legge inn teksten fra word her!]
+| Port | Brukes av |
+| - | - |
+| 80 | NodeJS |
 #### Server-funksjon
-[Husk å legge inn teksten fra word her!]
+Hoste NodeJS server og MariaDB databasen.
 ### Brukerveiledninger
-[Husk å legge inn teksten fra word her!]
+Hvordan laste opp filer til nettsiden?
+1. Du må logge inn for å laste opp filer. Dette kan du gjøre ved å trykke på "Login"-knappen
+![Login-knapp bilde](https://prnt.sc/0-nrs_awRcT5 "a title")
+
 ### Relevante lenker
 [Husk å legge inn teksten fra word her!]
 #### [Github](https://github.com/alsta017/-rsoppgave-2)
