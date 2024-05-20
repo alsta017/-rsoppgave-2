@@ -74,7 +74,7 @@ Hoste NodeJS server og MariaDB databasen.
 ### Brukerveiledninger
 Hvordan laste opp filer til nettsiden?
 1. Du må logge inn for å laste opp filer. Dette kan du gjøre ved å trykke på "Login"-knappen
-![Login-knapp bilde](https://prnt.sc/0-nrs_awRcT5 "a title")
+![Login knapp posisjon](https://prnt.sc/0-nrs_awRcT5 "Login")
 
 ### Relevante lenker
 [Husk å legge inn teksten fra word her!]
