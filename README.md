@@ -78,6 +78,17 @@ Hvordan laste opp filer til nettsiden?
 2. Her må du skrive inn brukernavn og passord hvis du har en bruker. Hvis du ikke har bruker så trykker du på "Registrer" og skriver inn ny bruker sitt brukernavn og passord.
 ![Login-tutorial2](/kode/src/images/login_tutorial2.png)
 3. Når du har skrevet inn brukernavn og passord trykker du på "Login"
+4. Nå kan du gå til "Last opp" siden ved å trykke på denne knappen:
+![lastopptutorial1](/kode/src/images/lastopptutorial1.png)
+5. For å laste opp en fil trykker du på "Velg fil" knappen.
+6. Du vil få opp et vindu som ligner på dette. Her må du finne ut hvor filen som du skal laste opp ligger.
+![lastopptutorial2](/kode/src/images/lastopptutorial2.png)
+7. Trykk på filen du vil laste opp og deretter på "Åpne" knappen for å laste den opp til nettsiden.
+![uploadtutorial3](/kode/src/images/uploadtutorial3.png)
+8. Nå kan du bare trykke på "Last opp" knappen, og vente. Den laster opp filen.
+![uploadtutoriallast](/kode/src/images/uploadtutoriallast.png)
+9. Du vil få opp en slik melding hvis den ble lastet opp.
+![lastetopp](/kode/src/images/lastetopp.png)
 ### Relevante lenker
 [Husk å legge inn teksten fra word her!]
 #### [Github](https://github.com/alsta017/-rsoppgave-2)
