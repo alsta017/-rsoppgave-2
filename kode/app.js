@@ -50,8 +50,8 @@ app.use(session({
 // Mariadb
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: 'IMKuben1337!',
+  user: 'Per',
+  password: 'password',
   database: 'årsoppgave2'
 });
 
