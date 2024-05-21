@@ -14,7 +14,7 @@ const cors = require('cors');
 const fs = require('fs');
 const { connect } = require("http2");
 const app = express();
-const port = 80;
+const port = 3000;
 const baseDir = __dirname || process.cwd();
 const async = require('async');
 
@@ -50,8 +50,8 @@ app.use(session({
 // Mariadb
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'Per',
-  password: 'password',
+  user: 'root',
+  password: 'IMKuben1337!',
   database: 'årsoppgave2'
 });
 
@@ -403,33 +403,33 @@ app.get('/check-login', function(req, res) {
 });
 
 app.get('/admin', function(req, res) {
-  // Check if the user is logged in and is an admin
   if (req.session.isLoggedIn && req.session.role === "Admin") {
-    // Query to get all users
+    res.sendFile(path.join(__dirname, '/src/html/admin.html'));
+  } else {
+    res.status(403).send('Not authorized');
+  }
+});
+
+app.get('/api/admin/files', function(req, res) {
+  if (req.session.isLoggedIn && req.session.role === "Admin") {
     connection.query('SELECT * FROM usernamepassword', function (err, users) {
       if (err) {
-        // Handle database query error
-        console.error("Error querying database:", err);
+        console.error("Database query error:", err);
         return res.status(500).send('Internal Server Error');
       }
 
-      // Array to store all files from all users
       let allFiles = [];
 
-      // Helper function to read files from a user's folder
       function readUserFiles(user, callback) {
         const userId = String(user.id);
         const userFolderPath = path.join(__dirname, "files", userId);
 
-        // Read files from user directory
         fs.readdir(userFolderPath, (err, files) => {
           if (err) {
-            // If user directory doesn't exist or error reading directory, move to next user
             console.error("Error reading user directory for user:", userId, err);
             return callback();
           }
 
-          // Add files to allFiles array
           files.forEach(file => {
             allFiles.push({
               userId: userId,
@@ -438,39 +438,43 @@ app.get('/admin', function(req, res) {
             });
           });
 
-          // Move to next user
           callback();
         });
       }
 
-      // Iterate over each user to retrieve their files
       async.each(users, readUserFiles, function(err) {
         if (err) {
-          // Handle error
           console.error("Error processing files:", err);
           return res.status(500).send('Internal Server Error');
         }
 
-        // Read the admin.html file
-        fs.readFile(path.join(__dirname, '/src/html/admin.html'), 'utf8', (err, html) => {
-          if (err) {
-            // Handle file read error
-            console.error("Error reading HTML file:", err);
-            return res.status(500).send('Internal Server Error');
-          }
-
-          // Replace placeholder in HTML with files array
-          const modifiedHtml = html.replace('<!-- FILES_PLACEHOLDER -->', JSON.stringify(allFiles));
-
-          // Send the modified HTML file to the client
-          res.send(modifiedHtml);
-        });
+        res.json(allFiles);
       });
     });
   } else {
-    // Redirect non-admins or not logged in users to the login page
-    res.redirect("/login");
+    res.status(403).json({ error: "Not authorized" });
   }
+});
+
+app.delete('/api/admin/files/:userId/:filename', function(req, res) {
+  if (!req.session.isLoggedIn || req.session.role !== "Admin") {
+    return res.status(403).json({ message: 'Not authorized' });
+  }
+
+  const { userId, filename } = req.params;
+  const filePath = path.join(__dirname, 'files', userId, filename);
+
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error deleting file', error: err });
+    }
+
+    res.status(200).json({ message: 'File deleted successfully', ok: true });
+  });
+});
+
+app.get('/faq', function(req, res) {
+  res.sendFile(path.join(__dirname + '/src/html/faq.html'));
 });
 
 //1. hente brukerens id fra db 
