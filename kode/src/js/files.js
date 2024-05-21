@@ -66,11 +66,18 @@ function copytoclipboard(id) {
         .then(response => response.json())
         .then(data => {
             if (data.link) {
-                navigator.clipboard.writeText(data.link).then(() => {
-                    alert("Link copied to clipboard");
-                }, err => {
-                    alert("Failed to copy link: " + err);
-                });
+                if (navigator.clipboard) {
+                    // Try to use the clipboard API
+                    navigator.clipboard.writeText(data.link).then(() => {
+                        alert("Link copied to clipboard");
+                    }).catch(err => {
+                        // Fallback if clipboard API fails
+                        fallbackCopyTextToClipboard(data.link);
+                    });
+                } else {
+                    // Fallback if navigator.clipboard is not available
+                    fallbackCopyTextToClipboard(data.link);
+                }
             } else {
                 throw new Error('No link provided by server');
             }
@@ -78,6 +85,31 @@ function copytoclipboard(id) {
         .catch(err => {
             alert("Failed to retrieve link: " + err.message);
         });
+}
+
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.width = "2em";
+    textArea.style.height = "2em";
+    textArea.style.padding = "0";
+    textArea.style.border = "none";
+    textArea.style.outline = "none";
+    textArea.style.boxShadow = "none";
+    textArea.style.background = "transparent";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        document.execCommand('copy');
+        alert("Link copied to clipboard");
+    } catch (err) {
+        alert("Failed to copy link: " + err);
+    }
+    document.body.removeChild(textArea);
 }
 
 
