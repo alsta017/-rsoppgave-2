@@ -14,7 +14,7 @@ const cors = require('cors');
 const fs = require('fs');
 const { connect } = require("http2");
 const app = express();
-const port = 3000;
+const port = 80;
 const baseDir = __dirname || process.cwd();
 const async = require('async');
 
